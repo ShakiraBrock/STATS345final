@@ -8,20 +8,20 @@ date: "2025-04-11"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Section One
+## Section One (Allison with songs)
 
 ```{r student1}
 
 ```
 
 
-## Section Two
+## Section Two (Gracie with year and time/word length)
 
 ```{r student2}
 
 ```
 
-## Section Three
+## Section Three (Shakira with lyrics)
 
 ```{r student3}
 
