@@ -24,6 +24,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Section Three (Shakira with lyrics)
 
 ```{r student3}
+#Data for all the songs
 songs_data <- tibble(
   Title = c(
     "He'll Have to Go", "El Paso", "Sink the Bismarck", "Please Help Me, I'm Falling", "Let's Think About Living",
@@ -64,9 +65,108 @@ songs_data <- tibble(
     285, 289, 312, 318, 298, 247, 260, 406, 396, 558, 381, 297, 359, 216, 361, 326, 470, 304, 323, 213, 315, 261, 294, 365,
     409, 311, 224, 340, 450, 276, 308, 384, 424, 223
   ),
- url = c("https://www.azlyrics.com/lyrics/jimreeves/hellhavetogo.html", "https://www.azlyrics.com/lyrics/martyrobbins/elpaso.html", "https://www.azlyrics.com/lyrics/johnnyhorton/sinkthebismark.html", "https://www.azlyrics.com/lyrics/everlybrothers/pleasehelpmeimfalling.html", "https://genius.com/Bob-luman-lets-think-about-living-lyrics", "https://www.azlyrics.com/lyrics/kennyrogers/somethingsburning.html", "https://www.azlyrics.com/lyrics/annemurray/snowbird.html", "https://www.azlyrics.com/lyrics/elvispresley/thewonderofyou.html", "https://www.azlyrics.com/lyrics/glencampbell/itsonlymakebelieve.html", "https://www.azlyrics.com/lyrics/kennyrogers/cowardofthecounty.html", "https://www.azlyrics.com/lyrics/kennyrogers/dontfallinlovewithadreamer.html", "https://www.azlyrics.com/lyrics/mickeygilley/standbyme.html", "https://www.azlyrics.com/lyrics/eddierabbitt/drivinmylifeaway.html", "https://www.azlyrics.com/lyrics/kennyrogers/youdecoratedmylife.html", "https://www.azlyrics.com/lyrics/charliedanielsband/inamerica.html", "https://www.azlyrics.com/lyrics/bonjovi/blazeofglory.html", "https://www.azlyrics.com/lyrics/lougramm/justbetweenyouandme.html", "https://www.azlyrics.com/lyrics/tompettyandtheheartbreakers/freefallin.html", "https://www.azlyrics.com/lyrics/faithhill/breathe.html", "https://www.azlyrics.com/lyrics/lonestar/amazed.html", "https://www.azlyrics.com/lyrics/faithhill/thewayyouloveme.html", "https://www.azlyrics.com/lyrics/leannrimes/ineedyou.html", "https://www.azlyrics.com/lyrics/jodeemessina/thatstheway.html", "https://www.azlyrics.com/lyrics/chadbrock/yes.html", "https://www.azlyrics.com/lyrics/georgestrait/thebestday.html", "https://www.azlyrics.com/lyrics/tobykeith/howdoyoulikemenow.html", "https://www.azlyrics.com/lyrics/timmcgraw/mybestfriend.html", "https://www.azlyrics.com/lyrics/leeannwomack/ihopeyoudance.html", "https://www.azlyrics.com/lyrics/lonestar/whataboutnow.html", "https://www.azlyrics.com/lyrics/dixiechicks/cowboytakemeaway.html", "https://www.azlyrics.com/lyrics/ladyantebellum/needyounow.html", "https://www.azlyrics.com/lyrics/taylorswift/mine.html", "https://www.azlyrics.com/lyrics/taylorswift/youbelongwithme.html", "https://www.azlyrics.com/lyrics/sugarland/stucklikeglue.html", "https://www.azlyrics.com/lyrics/carrieunderwood/undoit.html", "https://www.azlyrics.com/lyrics/mirandalambert/thehousethatbuiltme.html", "https://www.azlyrics.com/lyrics/bandperry/ifidieyoung.html", "https://www.azlyrics.com/lyrics/ladyantebellum/americanhoney.html", "https://www.azlyrics.com/lyrics/jerrodniemann/loverlover.html", "https://www.azlyrics.com/lyrics/maren-morris/thebones.html", "https://www.azlyrics.com/lyrics/gabbybarrett/ihopeduet.html", "https://www.azlyrics.com/lyrics/danshay/10000hours.html", "https://www.azlyrics.com/lyrics/morganwallen/chasinyou.html", "https://www.azlyrics.com/lyrics/blakeshelton/nobodybutyou.html", "https://www.azlyrics.com/lyrics/olddominion/onemanband.html", "https://www.azlyrics.com/lyrics/jasonaldean/gotwhatigot.html", "https://www.azlyrics.com/lyrics/maddietae/diefromabrokenheart.html", "https://www.azlyrics.com/lyrics/leebrice/oneofthemgirls.html", "https://www.azlyrics.com/lyrics/samhunt/hardtoforget.html", "https://www.azlyrics.com/lyrics/lukebryan/onemargarita.html", "https://www.azlyrics.com/lyrics/carlypearce/ihopeyourehappynow.html", "https://www.azlyrics.com/lyrics/lukecombs/eventhoughimleaving.html", "https://www.azlyrics.com/lyrics/kanebrown/belikethat.html", "https://www.azlyrics.com/lyrics/kanebrown/homesick.html", "https://www.azlyrics.com/lyrics/mirandalambert/bluebird.html", "https://www.azlyrics.com/lyrics/lukecombs/doestome.html", "https://www.azlyrics.com/lyrics/morganwallen/morethanmyhometown.html", "https://www.azlyrics.com/lyrics/lukecombs/lovinonyou.html"))
+url = c(
+  "https://genius.com/Jim-reeves-hell-have-to-go-lyrics",
+  "https://genius.com/Marty-robbins-el-paso-lyrics",
+  "https://genius.com/Johnny-horton-sink-the-bismarck-lyrics",
+  "https://genius.com/Hank-locklin-please-help-me-im-falling-lyrics",
+  "https://genius.com/Bob-luman-lets-think-about-living-lyrics",
+  "https://genius.com/Kenny-rogers-and-the-first-edition-somethings-burning-lyrics",
+  "https://genius.com/Anne-murray-snowbird-lyrics",
+  "https://genius.com/Elvis-presley-the-wonder-of-you-lyrics",
+  "https://genius.com/Glen-campbell-its-only-make-believe-lyrics",
+  "https://genius.com/Kenny-rogers-coward-of-the-county-lyrics",
+  "https://genius.com/Kenny-rogers-dont-fall-in-love-with-a-dreamer-lyrics",
+  "https://genius.com/Mickey-gilley-stand-by-me-lyrics",
+  "https://genius.com/Eddie-rabbitt-drivin-my-life-away-lyrics",
+  "https://genius.com/Kenny-rogers-you-decorated-my-life-lyrics",
+  "https://genius.com/Charlie-daniels-band-in-america-lyrics",
+  "https://genius.com/Bon-jovi-blaze-of-glory-lyrics",
+  "https://genius.com/Lou-gramm-just-between-you-and-me-lyrics",
+  "https://genius.com/Tom-petty-free-fallin-lyrics",
+  "https://genius.com/Faith-hill-breathe-lyrics",
+  "https://genius.com/Lonestar-amazed-lyrics",
+  "https://genius.com/Faith-hill-the-way-you-love-me-lyrics",
+  "https://genius.com/Leann-rimes-i-need-you-lyrics",
+  "https://genius.com/Jo-dee-messina-thats-the-way-lyrics",
+  "https://genius.com/Chad-brock-yes-lyrics",
+  "https://genius.com/George-strait-the-best-day-lyrics",
+  "https://genius.com/Toby-keith-how-do-you-like-me-now-lyrics",
+  "https://genius.com/Tim-mcgraw-my-best-friend-lyrics",
+  "https://genius.com/Lee-ann-womack-i-hope-you-dance-lyrics",
+  "https://genius.com/Lonestar-what-about-now-lyrics",
+  "https://genius.com/Dixie-chicks-cowboy-take-me-away-lyrics",
+  "https://genius.com/Lady-antebellum-need-you-now-lyrics",
+  "https://genius.com/Taylor-swift-mine-lyrics",
+  "https://genius.com/Taylor-swift-you-belong-with-me-lyrics",
+  "https://genius.com/Sugarland-stuck-like-glue-lyrics",
+  "https://genius.com/Carrie-underwood-undo-it-lyrics",
+  "https://genius.com/Miranda-lambert-the-house-that-built-me-lyrics",
+  "https://genius.com/The-band-perry-if-i-die-young-lyrics",
+  "https://genius.com/Lady-antebellum-american-honey-lyrics",
+  "https://genius.com/Jerrod-niemann-lover-lover-lyrics",
+  "https://genius.com/Maren-morris-the-bones-lyrics",
+  "https://genius.com/Gabby-barrett-i-hope-lyrics",
+  "https://genius.com/Dan-shay-and-justin-bieber-10000-hours-lyrics",
+  "https://genius.com/Morgan-wallen-chasin-you-lyrics",
+  "https://genius.com/Blake-shelton-and-gwen-stefani-nobody-but-you-lyrics",
+  "https://genius.com/Old-dominion-one-man-band-lyrics",
+  "https://genius.com/Jason-aldean-got-what-i-got-lyrics",
+  "https://genius.com/Maddie-and-tae-die-from-a-broken-heart-lyrics",
+  "https://genius.com/Lee-brice-one-of-them-girls-lyrics",
+  "https://genius.com/Sam-hunt-hard-to-forget-lyrics",
+  "https://genius.com/Luke-bryan-one-margarita-lyrics",
+  "https://genius.com/Carly-pearce-and-lee-brice-i-hope-youre-happy-now-lyrics",
+  "https://genius.com/Luke-combs-even-though-im-leaving-lyrics",
+  "https://genius.com/Kane-brown-swae-lee-and-khalid-be-like-that-lyrics",
+  "https://genius.com/Kane-brown-homesick-lyrics",
+  "https://genius.com/Miranda-lambert-bluebird-lyrics",
+  "https://genius.com/Luke-combs-and-eric-church-does-to-me-lyrics",
+  "https://genius.com/Morgan-wallen-more-than-my-hometown-lyrics",
+  "https://genius.com/Luke-combs-lovin-on-you-lyrics"
+))
+print(songs_data)
 ```
 
+```{r}
+#Function for pulling lyrics
+library(dplyr)
+library(rvest)
+library(stringr)
+library(purrr)
+library(rlang)  # for .data pronoun
+
+get_lyrics_genius <- function(url) {
+  tryCatch({
+    h <- read_html(url)
+    lyrics <- html_nodes(h, ".Lyrics__Container-sc-1ynbvzw-6") %>% html_text2()
+    full_lyrics <- paste(lyrics, collapse = " ")
+    list(
+      words = str_split(full_lyrics, "\\s+")[[1]],
+      text = full_lyrics
+    )
+  }, error = function(e) {
+    warning("Failed to scrape: ", url)
+    return(list(words = NA, text = NA))
+  })
+}
+
+# Apply to dataset
+songs_df_with_lyrics <- songs_data %>%
+  rowwise() %>%
+  mutate(
+    lyrics_data = list(get_lyrics_genius(url)),
+    words = lyrics_data$words,
+    full_text = lyrics_data$text,
+    word_count = if (!is.na(words)) length(words) else NA
+  ) %>%
+  ungroup()
+
+print(songs_df_with_lyrics) #Currently not working 
+
+
+
+```
 
 
 ## Section Four (Working together on function)
