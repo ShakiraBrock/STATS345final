@@ -178,6 +178,7 @@ print(songs_df_with_lyrics)
 
 ```
 ```{r}
+#cleaning function
 clean_lyrics_text <- function(full_text) {
   if (!is.na(full_text) && nchar(full_text) > 0) {
     lines <- str_split(full_text, "\n")[[1]]
