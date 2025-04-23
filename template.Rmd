@@ -129,17 +129,18 @@ print(songs_data)
 ```
 
 ```{r}
-#Function for pulling lyrics
+
 library(dplyr)
 library(rvest)
 library(stringr)
 library(purrr)
-library(rlang)  # for .data pronoun
 
+# Updated lyrics scraper with latest selector
 get_lyrics_genius <- function(url) {
   tryCatch({
     h <- read_html(url)
-    lyrics <- html_nodes(h, ".Lyrics__Container-sc-1ynbvzw-6") %>% html_text2()
+    lyrics <- html_nodes(h, 'div[data-lyrics-container="true"]') %>%
+      html_text2()
     full_lyrics <- paste(lyrics, collapse = " ")
     list(
       words = str_split(full_lyrics, "\\s+")[[1]],
@@ -151,20 +152,29 @@ get_lyrics_genius <- function(url) {
   })
 }
 
-# Apply to dataset
-songs_df_with_lyrics <- songs_data %>%
+# Add row_id to track songs
+songs_data <- songs_data %>%
+  mutate(row_id = row_number())
+
+# Pull lyrics safely
+lyrics_df <- songs_data %>%
   rowwise() %>%
   mutate(
     lyrics_data = list(get_lyrics_genius(url)),
-    words = lyrics_data$words,
+    words = list(lyrics_data$words),         # wrap in list()
     full_text = lyrics_data$text,
-    word_count = if (!is.na(words)) length(words) else NA
+    word_count = if (!is.na(lyrics_data$words[1])) length(lyrics_data$words) else NA
   ) %>%
-  ungroup()
+  ungroup() %>%
+  select(row_id, words, full_text, word_count)
 
-print(songs_df_with_lyrics) #Currently not working 
+# Join lyrics back to main data
+songs_df_with_lyrics <- songs_data %>%
+  left_join(lyrics_df, by = "row_id") %>%
+  select(-row_id)
 
-
+# Take a peek!
+print(songs_df_with_lyrics)
 
 ```
 
