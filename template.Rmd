@@ -173,10 +173,53 @@ songs_df_with_lyrics <- songs_data %>%
   left_join(lyrics_df, by = "row_id") %>%
   select(-row_id)
 
-# Take a peek!
 print(songs_df_with_lyrics)
 
 ```
+```{r}
+clean_lyrics_text <- function(full_text) {
+  if (!is.na(full_text) && nchar(full_text) > 0) {
+    lines <- str_split(full_text, "\n")[[1]]
+    
+    # Remove the first line if it contains the song title and "Lyrics"
+    if (length(lines) > 0 && str_detect(lines[1], "\\s*Lyrics$")) {
+      lines <- lines[-1]  # Remove the first line
+    }
+    
+    # Additional clean-up
+    lines <- lines[!str_detect(lines, "^\\d+ Contributors") & !str_detect(lines, "Lyrics$")]
+    
+    # Remove any text within brackets (square, round, or curly)
+    lines <- str_replace_all(lines, "\\[.*?\\]", "")  # Removes text in square brackets
+    lines <- str_replace_all(lines, "\\(.*?\\)", "")  # Removes text in round brackets
+    lines <- str_replace_all(lines, "\\{.*?\\}", "")  # Removes text in curly brackets
+    
+    # Combine the remaining lines into a clean text
+    clean_text <- str_c(lines, collapse = "\n")
+    
+    return(clean_text)
+  } else {
+    return("")  # Return an empty string if the input is NA or empty
+  }
+}
+```
+
+```{r}
+#cleaning function applied to dataset
+songs_df_with_lyrics <- songs_df_with_lyrics %>%
+  mutate(
+    clean_full_text = map_chr(full_text, clean_lyrics_text),  
+    clean_words = str_split(clean_full_text, "\\s+"),
+    clean_word_count = map_int(clean_words, length)
+  )
+
+```
+
+
+
+
+
+
 
 
 ## Section Four (Working together on function)
