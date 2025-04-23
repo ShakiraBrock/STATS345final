@@ -1,5 +1,5 @@
 ---
-title: "Super Awesome Project Template"
+title: "Allison, Shakira, and Gracie Final Stat 345 Project"
 output: word_document
 date: "2025-04-11"
 ---
