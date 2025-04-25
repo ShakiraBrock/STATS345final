@@ -227,54 +227,6 @@ songs_df_with_lyrics <- songs_df_with_lyrics %>%
 ## Section Four (Working together on function)
 
 ```{r student4}
-#going to have to create lists like this (i got this from chatgpt)
-#maybe we do a different list for each decade 
-songs <- list(
-  list(title = "Hello", lyrics = "Hello, it's me. I was wondering if after all these years you'd like to meet."),
-  list(title = "Shake It Off", lyrics = "Cause the players gonna play, play, play, play, play. And the haters gonna hate, hate, hate, hate, hate."),
-  list(title = "Happy", lyrics = "Because I'm happy. Clap along if you feel like a room without a roof. Because I'm happy.")
-)
-
-#then write a function that can run through this list 
-
-
-#possible function looking for titles
-measure_title_repetition <- function(lyrics, title) {
-  # Normalize text
-  lyrics_clean <- tolower(gsub("[[:punct:]]", "", lyrics))
-  title_clean <- tolower(gsub("[[:punct:]]", "", title))
-  
-  words <- unlist(strsplit(lyrics_clean, "\\s+"))
-  title_words <- unlist(strsplit(title_clean, "\\s+"))
-  
-  title_length <- length(title_words)
-  if (length(words) < title_length) return(0)
-  
-  # Slide through lyrics to match title
-  matches <- 0
-  for (i in 1:(length(words) - title_length + 1)) {
-    if (all(words[i:(i + title_length - 1)] == title_words)) {
-      matches <- matches + 1
-    }
-  }
-  
-  # Return matches normalized by total number of phrases in lyrics
-  return(matches / (length(words) - title_length + 1))
-}
-
-
-
-
-#how to get the results of how many songs repeat their title
-results <- lapply(songs, function(song) {
-  list(
-    title = song$title,
-    title_rep = measure_title_repetition(song$lyrics, song$title)
-  )
-})
-
-# Show results
-print(results)
 
 
 ```
