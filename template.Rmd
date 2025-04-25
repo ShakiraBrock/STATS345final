@@ -25,6 +25,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Section Three (Shakira with lyrics)
 
 ```{r student3}
+library(tidyverse)
 #Data for all the songs
 songs_data <- tibble(
   Title = c(
@@ -175,8 +176,8 @@ songs_df_with_lyrics <- songs_data %>%
   select(-row_id)
 
 print(songs_df_with_lyrics)
-
 ```
+
 ```{r}
 #cleaning function
 clean_lyrics_text <- function(full_text) {
@@ -219,14 +220,20 @@ songs_df_with_lyrics <- songs_df_with_lyrics %>%
 
 
 
-
-
-
-
-
 ## Section Four (Working together on function)
 
 ```{r student4}
+#function for title repititon
+songs_df_with_lyrics <- songs_df_with_lyrics %>%
+  rowwise() %>%
+  mutate(
+    title_count = str_count(
+    str_to_lower(clean_full_text), 
+    regex(paste0("\\b", str_to_lower(Title), "\\b"))
+    )
+  ) %>%
+  ungroup()
 
+songs_df_with_lyrics %>% select(Title, title_count)
 
 ```
