@@ -26,6 +26,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r student3}
 #Data for all the songs
+library(tidyverse)
 songs_data <- tibble(
   Title = c(
     "He'll Have to Go", "El Paso", "Sink the Bismarck", "Please Help Me, I'm Falling", "Let's Think About Living",
@@ -129,6 +130,7 @@ url = c(
 print(songs_data)
 ```
 
+
 ```{r}
 
 library(dplyr)
@@ -145,7 +147,7 @@ get_lyrics_genius <- function(url) {
     full_lyrics <- paste(lyrics, collapse = " ")
     list(
       words = str_split(full_lyrics, "\\s+")[[1]],
-      text = full_lyrics
+      text = full_lyrics, lines = str_split(full_lyrics, "\\n+")[[1]]
     )
   }, error = function(e) {
     warning("Failed to scrape: ", url)
@@ -164,63 +166,35 @@ lyrics_df <- songs_data %>%
     lyrics_data = list(get_lyrics_genius(url)),
     words = list(lyrics_data$words),         # wrap in list()
     full_text = lyrics_data$text,
+    lines = list(lyrics_data$lines),
     word_count = if (!is.na(lyrics_data$words[1])) length(lyrics_data$words) else NA
   ) %>%
   ungroup() %>%
-  select(row_id, words, full_text, word_count)
+  select(row_id, words, full_text, word_count, lines)
 
 # Join lyrics back to main data
 songs_df_with_lyrics <- songs_data %>%
   left_join(lyrics_df, by = "row_id") %>%
   select(-row_id)
-
-print(songs_df_with_lyrics)
-
 ```
 ```{r}
 #cleaning function
-clean_lyrics_text <- function(full_text) {
-  if (!is.na(full_text) && nchar(full_text) > 0) {
-    lines <- str_split(full_text, "\n")[[1]]
-    
-    # Remove the first line if it contains the song title and "Lyrics"
-    if (length(lines) > 0 && str_detect(lines[1], "\\s*Lyrics$")) {
-      lines <- lines[-1]  # Remove the first line
-    }
-    
-    # Additional clean-up
-    lines <- lines[!str_detect(lines, "^\\d+ Contributors") & !str_detect(lines, "Lyrics$")]
-    
-    # Remove any text within brackets (square, round, or curly)
-    lines <- str_replace_all(lines, "\\[.*?\\]", "")  # Removes text in square brackets
-    lines <- str_replace_all(lines, "\\(.*?\\)", "")  # Removes text in round brackets
-    lines <- str_replace_all(lines, "\\{.*?\\}", "")  # Removes text in curly brackets
-    
-    # Combine the remaining lines into a clean text
-    clean_text <- str_c(lines, collapse = "\n")
-    
-    return(clean_text)
-  } else {
-    return("")  # Return an empty string if the input is NA or empty
-  }
-}
+clean <- ifelse(
+  grepl("\\[", lines),
+  sub(".*?(\\[.*?\\]).*", "\\1", lines),
+  lines
+)
+
+
 ```
+
+
 
 ```{r}
 #cleaning function applied to dataset
-songs_df_with_lyrics <- songs_df_with_lyrics %>%
-  mutate(
-    clean_full_text = map_chr(full_text, clean_lyrics_text),  
-    clean_words = str_split(clean_full_text, "\\s+"),
-    clean_word_count = map_int(clean_words, length)
-  )
+
 
 ```
-
-
-
-
-
 
 
 
