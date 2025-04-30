@@ -155,42 +155,40 @@ get_lyrics_genius <- function(url) {
     return(list(words = NA, text = NA))
   })
 }
+#clean and mutate
 
-# Add row_id to track songs
-songs_data <- songs_data %>%
-  mutate(row_id = row_number())
+library(stringr)
 
-# Pull lyrics safely
 lyrics_df <- songs_data %>%
   rowwise() %>%
   mutate(
     lyrics_data = list(get_lyrics_genius(url)),
-    words = list(lyrics_data$words),         # wrap in list()
     full_text = lyrics_data$text,
-    lines = list(lyrics_data$lines),
-    word_count = if (!is.na(lyrics_data$words[1])) length(lyrics_data$words) else NA
+
+    # Find positions of "Lyrics" and "["
+    pos_lyrics = str_locate(full_text, "Lyrics")[,1],
+    pos_bracket = str_locate(full_text, "\\[")[,1],
+
+    # Determine earliest position that's not NA
+    cut_pos = min(na.omit(c(pos_lyrics, pos_bracket)), na.rm = TRUE),
+
+    # Cut from that position onward if one exists
+    clean_text = if (!is.na(cut_pos)) substr(full_text, cut_pos, nchar(full_text)) else full_text,
+
+    # Remove bracketed content
+    no_brackets_text = gsub("\\[.*?\\]", "", clean_text),
+
+    # Split and count
+    words = list(str_split(no_brackets_text, "\\s+")[[1]]),
+    lines = list(str_split(no_brackets_text, "\\n+")[[1]]),
+    word_count = if (!is.na(words[[1]])) length(words[[1]]) else NA
   ) %>%
   ungroup() %>%
-  select(row_id, words, full_text, word_count, lines)
+  select(row_id, words, full_text, clean_text, no_brackets_text, word_count, lines)
 
-# Join lyrics back to main data
-songs_df_with_lyrics <- songs_data %>%
-  left_join(lyrics_df, by = "row_id") %>%
-  select(-row_id)
-<<<<<<< HEAD
-=======
-
-print(songs_df_with_lyrics)
->>>>>>> 9417a5b51d5153a100f315ef35c8bd691eacc9c5
 ```
-
 ```{r}
-#cleaning function
-clean <- ifelse(
-  grepl("\\[", lines),
-  sub(".*?(\\[.*?\\]).*", "\\1", lines),
-  lines
-)
+
 
 
 ```
@@ -200,7 +198,11 @@ clean <- ifelse(
 ```{r}
 #cleaning function applied to dataset
 
+<<<<<<< HEAD
+=======
 
+print(songs_df_with_lyrics)
+>>>>>>> 9417a5b51d5153a100f315ef35c8bd691eacc9c5
 ```
 
 
