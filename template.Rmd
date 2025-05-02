@@ -158,9 +158,19 @@ clean_lyrics_text <- function(full_text) {
      
      #IF IT STARTS WITH A NUMBER REMOVE EVERYTHING BEFORE LYRICS
      
-     
      # Combine the remaining lines into a clean text
      clean_text <- str_c(lines, collapse = "\n")
+     
+     
+    # If the text starts with a number, remove everything before the word "Lyrics"
+    if (str_detect(str_trim(clean_text), "^\\d")) {
+      # Look for the word "Lyrics" (case-insensitive)
+      match_pos <- str_locate(tolower(clean_text), "lyrics")[1, "end"]
+      if (!is.na(match_pos)) {
+        clean_text <- str_sub(clean_text, match_pos + 1)
+        clean_text <- str_trim(clean_text)
+      }
+    }
      
      return(clean_text)
    } else {
