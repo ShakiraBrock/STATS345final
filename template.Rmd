@@ -8,21 +8,7 @@ date: "2025-04-11"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Section One (Allison with songs)
-
-```{r student1}
-##songs listed in word document 
-```
-
-
-## Section Two (Gracie with year and time/word length)
-
-```{r student2}
-
-
-```
-
-## Section Three (Shakira with lyrics)
+## lyrics and songs 
 
 ```{r student3}
 library(tidyverse)
@@ -135,61 +121,31 @@ print(songs_data)
 ```{r}
 
 library(dplyr)
-library(rvest)
-library(stringr)
-library(purrr)
-
-# Updated lyrics scraper with latest selector
-get_lyrics_genius <- function(url) {
-  tryCatch({
-    h <- read_html(url)
-    lyrics <- html_nodes(h, 'div[data-lyrics-container="true"]') %>%
-      html_text2()
-    full_lyrics <- paste(lyrics, collapse = " ")
-    list(
-      words = str_split(full_lyrics, "\\s+")[[1]],
-      text = full_lyrics, lines = str_split(full_lyrics, "\\n+")[[1]]
-    )
-  }, error = function(e) {
-    warning("Failed to scrape: ", url)
-    return(list(words = NA, text = NA))
-  })
-}
-#clean and mutate
-
-library(stringr)
-
-lyrics_df <- songs_data %>%
-  rowwise() %>%
-  mutate(
-    lyrics_data = list(get_lyrics_genius(url)),
-    full_text = lyrics_data$text,
-
-    # Find positions of "Lyrics" and "["
-    pos_lyrics = str_locate(full_text, "Lyrics")[,1],
-    pos_bracket = str_locate(full_text, "\\[")[,1],
-
-    # Determine earliest position that's not NA
-    cut_pos = min(na.omit(c(pos_lyrics, pos_bracket)), na.rm = TRUE),
-
-    # Cut from that position onward if one exists
-    clean_text = if (!is.na(cut_pos)) substr(full_text, cut_pos, nchar(full_text)) else full_text,
-
-    # Remove bracketed content
-    no_brackets_text = gsub("\\[.*?\\]", "", clean_text),
-
-    # Split and count
-    words = list(str_split(no_brackets_text, "\\s+")[[1]]),
-    lines = list(str_split(no_brackets_text, "\\n+")[[1]]),
-    word_count = if (!is.na(words[[1]])) length(words[[1]]) else NA
-  ) %>%
-  ungroup() %>%
-  select(row_id, words, full_text, clean_text, no_brackets_text, word_count, lines)
+ library(rvest)
+ library(stringr)
+ library(purrr)
+ 
+ # Pull lyrics safely
+ lyrics_df <- songs_data %>%
+   rowwise() %>%
+   mutate(
+     lyrics_data = list(get_lyrics_genius(url)),
+     words = list(lyrics_data$words),         # wrap in list()
+     full_text = lyrics_data$text,
+     word_count = if (!is.na(lyrics_data$words[1])) length(lyrics_data$words) else NA
+   ) %>%
+   ungroup() %>%
+   select(row_id, words, full_text, word_count)
+ 
+ # Join lyrics back to main data
+ songs_df_with_lyrics <- songs_data %>%
+   left_join(lyrics_df, by = "row_id") %>%
+   select(-row_id)
+ 
+ print(songs_df_with_lyrics)
 
 ```
 ```{r}
-
-
 
 ```
 
@@ -198,11 +154,6 @@ lyrics_df <- songs_data %>%
 ```{r}
 #cleaning function applied to dataset
 
-<<<<<<< HEAD
-=======
-
-print(songs_df_with_lyrics)
->>>>>>> 9417a5b51d5153a100f315ef35c8bd691eacc9c5
 ```
 
 
@@ -224,3 +175,38 @@ songs_df_with_lyrics <- songs_df_with_lyrics %>%
 songs_df_with_lyrics %>% select(Title, title_count)
 
 ```
+
+
+```{r}
+#graph for average amount of times title is repeated in song by year
+
+library(dplyr)
+library(ggplot2)
+
+
+avg_title_per_year <- songs_df_with_lyrics %>%
+  group_by(Year) %>%
+  summarise(avg_title_count = mean(title_count, na.rm = TRUE))
+
+ggplot(avg_title_per_year, aes(x = year, y = avg_title_count)) +
+  geom_line(color = "steelblue", size = 1) +
+  geom_point(color = "darkred", size = 2) +
+  labs(
+    title = "Average Title Count per Year",
+    x = "Year",
+    y = "Average Title Count"
+  ) +
+  theme_minimal()
+
+
+
+
+```
+
+```{r}
+
+
+
+
+```
+
