@@ -106,7 +106,6 @@ url = c(
   "https://genius.com/Kane-brown-swae-lee-and-khalid-be-like-that-lyrics",
   "https://genius.com/Kane-brown-homesick-lyrics",
   "https://genius.com/Miranda-lambert-bluebird-lyrics",
-  "https://genius.com/Luke-combs-and-eric-church-does-to-me-lyrics",
   "https://genius.com/Morgan-wallen-more-than-my-hometown-lyrics",
   "https://genius.com/Luke-combs-lovin-on-you-lyrics"
 ))
@@ -119,6 +118,8 @@ library(rvest)
 library(stringr)
 library(purrr)
  
+songs_data <- songs_data %>% mutate(row_id = row_number())
+
  # Pull lyrics safely
  lyrics_df <- songs_data %>%
    rowwise() %>%
@@ -140,6 +141,45 @@ library(purrr)
 
 ```{r}
 #cleaning function applied to dataset
+clean_lyrics_text <- function(full_text) {
+   if (!is.na(full_text) && nchar(full_text) > 0) {
+     lines <- str_split(full_text, "\n")[[1]]
+     
+    #CODE FOR REMOVING BEFORE BRACKET
+    first_bracket_line <- which(str_detect(lines, "^\\["))[1]
+    if (!is.na(first_bracket_line)) {
+      lines <- lines[first_bracket_line:length(lines)]
+    }
+     
+     # Remove any text within brackets (square, round, or curly)
+     lines <- str_replace_all(lines, "\\[.*?\\]", "")  # Removes text in square brackets
+     lines <- str_replace_all(lines, "\\(.*?\\)", "")  # Removes text in round brackets
+     lines <- str_replace_all(lines, "\\{.*?\\}", "")  # Removes text in curly brackets
+     
+     #IF IT STARTS WITH A NUMBER REMOVE EVERYTHING BEFORE LYRICS
+     
+     
+     # Combine the remaining lines into a clean text
+     clean_text <- str_c(lines, collapse = "\n")
+     
+     return(clean_text)
+   } else {
+     return("")  # Return an empty string if the input is NA or empty
+   }
+ }
+
+```
+
+
+```{r}
+ #cleaning function applied to dataset
+ songs_df_with_lyrics <- songs_df_with_lyrics %>%
+   mutate(
+     clean_full_text = map_chr(full_text, clean_lyrics_text),  
+     clean_words = str_split(clean_full_text, "\\s+"),
+     clean_word_count = map_int(clean_words, length)
+   )
+ 
 
 ```
 
