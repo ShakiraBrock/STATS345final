@@ -156,13 +156,12 @@ clean_lyrics_text <- function(full_text) {
      lines <- str_replace_all(lines, "\\(.*?\\)", "")  # Removes text in round brackets
      lines <- str_replace_all(lines, "\\{.*?\\}", "")  # Removes text in curly brackets
      
-     #IF IT STARTS WITH A NUMBER REMOVE EVERYTHING BEFORE LYRICS
-     
+
      # Combine the remaining lines into a clean text
      clean_text <- str_c(lines, collapse = "\n")
      
      
-    # If the text starts with a number, remove everything before the word "Lyrics"
+    # If the text starts with a number, remove everything before and the word "Lyrics"
     if (str_detect(str_trim(clean_text), "^\\d")) {
       # Look for the word "Lyrics" (case-insensitive)
       match_pos <- str_locate(tolower(clean_text), "lyrics")[1, "end"]
@@ -180,7 +179,6 @@ clean_lyrics_text <- function(full_text) {
 
 ```
 
-
 ```{r}
  #cleaning function applied to dataset
  songs_df_with_lyrics <- songs_df_with_lyrics %>%
@@ -189,8 +187,6 @@ clean_lyrics_text <- function(full_text) {
      clean_words = str_split(clean_full_text, "\\s+"),
      clean_word_count = map_int(clean_words, length)
    )
- 
-
 ```
 
 
@@ -213,19 +209,18 @@ songs_df_with_lyrics %>% select(Title, title_count)
 
 ```
 
-
 ```{r}
 #graph for average amount of times title is repeated in song by year
-
 library(dplyr)
 library(ggplot2)
 
-
+# Summarize average title count per year
 avg_title_per_year <- songs_df_with_lyrics %>%
   group_by(Year) %>%
   summarise(avg_title_count = mean(title_count, na.rm = TRUE))
 
-ggplot(avg_title_per_year, aes(x = year, y = avg_title_count)) +
+# Plot the trend
+ggplot(avg_title_per_year, aes(x = Year, y = avg_title_count)) +
   geom_line(color = "steelblue", size = 1) +
   geom_point(color = "darkred", size = 2) +
   labs(
@@ -235,14 +230,99 @@ ggplot(avg_title_per_year, aes(x = year, y = avg_title_count)) +
   ) +
   theme_minimal()
 
+```
+Looking at the graph above, we can see little trend in the average title usuage in country songs across the decads sinces 1960.
+
+```{r}
+#function for phrase repetition (I pasted this from chat so it needs to be looked at)
+library(stringr)
+library(dplyr)
+library(tidyr)
+
+# Function to find most repeated phrase in a song
+most_repeated_phrase <- function(lyrics, n = 3) {
+  if (is.na(lyrics) || nchar(lyrics) == 0) return(NA)
+  
+  # Clean and tokenize lyrics
+  words <- str_to_lower(lyrics) %>%
+    str_replace_all("[^a-z\\s]", "") %>%
+    str_squish() %>%
+    str_split(" ") %>%
+    unlist()
+  
+  if (length(words) < n) return(NA)
+  
+  # Create n-grams
+  ngrams <- sapply(1:(length(words) - n + 1), function(i) {
+    paste(words[i:(i + n - 1)], collapse = " ")
+  })
+
+  # Count frequency of each phrase
+  phrase_counts <- table(ngrams)
+  phrase_df <- as.data.frame(phrase_counts, stringsAsFactors = FALSE)
+  colnames(phrase_df) <- c("phrase", "count")
+  
+  # Get the most repeated phrase
+  top_phrase <- phrase_df %>%
+    arrange(desc(count)) %>%
+    slice(1)
+  
+  return(top_phrase)
+}
+
+# Apply to a dataframe column
+songs_df_with_lyrics <- songs_df_with_lyrics %>%
+  rowwise() %>%
+  mutate(top_phrase = list(most_repeated_phrase(clean_full_text)),
+         most_repeated_phrase = top_phrase$phrase,
+         phrase_count = top_phrase$count) %>%
+  select(-top_phrase)
 
 
+
+repetition_summary <- songs_df_with_lyrics %>%
+  rowwise() %>%
+  mutate(
+    top_info = list(most_repeated_phrase(clean_full_text, n = 3)),  # Change n for bigram/trigram
+    most_repeated_phrase = top_info$phrase,
+    phrase_count = top_info$count
+  ) %>%
+  ungroup() %>%
+  select(Title, most_repeated_phrase, phrase_count)
+
+# Print the result
+print(repetition_summary)
 
 ```
 
 ```{r}
+#graph of phrase repetition across decades (this is also from chat)
 
+library(dplyr)
+library(ggplot2)
 
+# Step 1: Create Decade column
+songs_with_decade <- songs_df_with_lyrics %>%
+  filter(!is.na(Year), !is.na(phrase_count)) %>%
+  mutate(Decade = paste0(floor(Year / 10) * 10, "s"))
+
+# Step 2: Compute average phrase repetition per decade
+avg_phrase_repetition <- songs_with_decade %>%
+  group_by(Decade) %>%
+  summarise(avg_phrase_count = mean(as.numeric(phrase_count), na.rm = TRUE)) %>%
+  arrange(Decade)
+
+# Step 3: Plot
+ggplot(avg_phrase_repetition, aes(x = Decade, y = avg_phrase_count, group = 1)) +
+  geom_line(color = "steelblue", size = 1) +
+  geom_point(color = "darkred", size = 2) +
+  labs(
+    title = "Average Phrase Repetition Across Decades",
+    x = "Decade",
+    y = "Average Count of Most Repeated Phrase"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 
 ```
