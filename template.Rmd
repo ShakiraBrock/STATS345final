@@ -13,46 +13,44 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r student3}
 library(tidyverse)
 #Data for all the songs
-library(tidyverse)
 songs_data <- tibble(
   Title = c(
     "He'll Have to Go", "El Paso", "Sink the Bismarck", "Please Help Me, I'm Falling", "Let's Think About Living",
     "Something's Burning", "Snowbird", "The Wonder of You", "It's Only Make Believe", "Coward of the County",
-    "Don't Fall in Love with a Dreamer", "Stand by Me", "Drivin' My Life Away", "You Decorated My Life", "In America",
+    "Don't Fall in Love with a Dreamer", "Stand by Me", "Drivin' My Life Away", "You Decorated My Life",
     "Blaze of Glory", "Just Between You and Me", "Free Fallin'", "Breathe", "Amazed", "The Way You Love Me", "I Need You",
     "That's the Way", "Yes!", "The Best Day", "How Do You Like Me Now?!", "My Best Friend", "I Hope You Dance",
     "What About Now", "Cowboy Take Me Away", "Need You Now", "Mine", "You Belong with Me", "Stuck Like Glue", "Undo It",
     "The House That Built Me", "If I Die Young", "American Honey", "Lover, Lover", "The Bones", "I Hope", "10,000 Hours",
-    "Chasin' You", "Nobody but You", "One Man Band", "Got What I Got", "Die from a Broken Heart", "One of Them Girls",
+    "Chasin' You", "One Man Band", "Got What I Got", "Die from a Broken Heart", "One of Them Girls",
     "Hard to Forget", "One Margarita", "I Hope You're Happy Now", "Even Though I'm Leaving", "Be Like That", "Homesick",
-    "Bluebird", "Does to Me", "More Than My Hometown", "Lovin' on You"
+    "Bluebird", "More Than My Hometown", "Lovin' on You"
   ),
   Artist = c(
     "Jim Reeves", "Marty Robbins", "Johnny Horton", "Hank Locklin", "Bob Luman", "Kenny Rogers & The First Edition",
     "Anne Murray", "Elvis Presley", "Glen Campbell", "Kenny Rogers", "Kenny Rogers & Kim Carnes", "Mickey Gilley",
-    "Eddie Rabbitt", "Kenny Rogers", "Charlie Daniels Band", "Jon Bon Jovi", "Lou Gramm", "Tom Petty", "Faith Hill",
+    "Eddie Rabbitt", "Kenny Rogers", "Jon Bon Jovi", "Lou Gramm", "Tom Petty", "Faith Hill",
     "Lonestar", "Faith Hill", "LeAnn Rimes", "Jo Dee Messina", "Chad Brock", "George Strait", "Toby Keith", "Tim McGraw",
     "Lee Ann Womack with Sons of the Desert", "Lonestar", "Dixie Chicks", "Lady Antebellum", "Taylor Swift", "Taylor Swift",
     "Sugarland", "Carrie Underwood", "Miranda Lambert", "The Band Perry", "Lady Antebellum", "Jerrod Niemann", "Maren Morris",
-    "Gabby Barrett featuring Charlie Puth", "Dan + Shay and Justin Bieber", "Morgan Wallen", "Blake Shelton and Gwen Stefani",
-    "Old Dominion", "Jason Aldean", "Maddie & Tae", "Lee Brice", "Sam Hunt", "Luke Bryan", "Carly Pearce and Lee Brice",
-    "Luke Combs", "Kane Brown, Swae Lee and Khalid", "Kane Brown", "Miranda Lambert", "Luke Combs featuring Eric Church",
+    "Gabby Barrett featuring Charlie Puth", "Dan + Shay and Justin Bieber", "Morgan Wallen", "Old Dominion", "Jason Aldean", "Maddie & Tae", "Lee Brice", "Sam Hunt", "Luke Bryan", "Carly Pearce and Lee Brice",
+    "Luke Combs", "Kane Brown, Swae Lee and Khalid", "Kane Brown", "Miranda Lambert",
     "Morgan Wallen", "Luke Combs"
   ),
   Year = c(
-    1959, 1959, 1960, 1960, 1960, 1970, 1970, 1970, 1970, 1979, 1980, 1980, 1980, 1979, 1980, 1990, 1989, 1989, 1999, 1999,
+    1959, 1959, 1960, 1960, 1960, 1970, 1970, 1970, 1970, 1979, 1980, 1980, 1980, 1979, 1990, 1989, 1989, 1999, 1999,
     2000, 2000, 2000, 2000, 2000, 1999, 1999, 2000, 2000, 1999, 2009, 2010, 2008, 2010, 2010, 2010, 2010, 2010, 2010, 2019,
-    2020, 2019, 2019, 2019, 2020, 2020, 2019, 2020, 2020, 2020, 2019, 2019, 2020, 2019, 2019, 2020, 2020, 2020
+    2020, 2019, 2019, 2020, 2020, 2019, 2020, 2020, 2020, 2019, 2019, 2020, 2019, 2019, 2020, 2020
   ),
   Song_Length_Seconds = c(
-    140, 278, 194, 141, 122, 245, 128, 159, 145, 260, 219, 216, 197, 218, 201, 335, 296, 254, 249, 240, 187, 228, 200, 203,
-    200, 210, 279, 294, 212, 287, 277, 230, 232, 247, 177, 236, 223, 224, 198, 197, 210, 167, 205, 195, 188, 198, 223, 178,
-    193, 199, 225, 190, 205, 209, 223, 217, 195, 205
+    140, 278, 194, 141, 122, 245, 128, 159, 145, 260, 219, 216, 197, 218, 335, 296, 254, 249, 240, 187, 228, 200, 203,
+    200, 210, 279, 294, 212, 287, 277, 230, 232, 247, 177, 236, 223, 224, 198, 197, 210, 167, 205, 188, 198, 223, 178,
+    193, 199, 225, 190, 205, 209, 223, 195, 205
   ),
   Word_Count = c(
-    152, 466, 430, 114, 281, 191, 220, 116, 165, 419, 213, 154, 252, 161, 295, 368, 271, 176, 254, 256, 306, 198, 467, 262,
-    285, 289, 312, 318, 298, 247, 260, 406, 396, 558, 381, 297, 359, 216, 361, 326, 470, 304, 323, 213, 315, 261, 294, 365,
-    409, 311, 224, 340, 450, 276, 308, 384, 424, 223
+    152, 466, 430, 114, 281, 191, 220, 116, 165, 419, 213, 154, 252, 161, 368, 271, 176, 254, 256, 306, 198, 467, 262,
+    285, 289, 312, 318, 298, 247, 260, 406, 396, 558, 381, 297, 359, 216, 361, 326, 470, 304, 323, 315, 261, 294, 365,
+    409, 311, 224, 340, 450, 276, 308, 424, 223
   ),
 url = c(
   "https://genius.com/Jim-reeves-hell-have-to-go-lyrics",
@@ -69,7 +67,6 @@ url = c(
   "https://genius.com/Mickey-gilley-stand-by-me-lyrics",
   "https://genius.com/Eddie-rabbitt-drivin-my-life-away-lyrics",
   "https://genius.com/Kenny-rogers-you-decorated-my-life-lyrics",
-  "https://genius.com/Charlie-daniels-band-in-america-lyrics",
   "https://genius.com/Bon-jovi-blaze-of-glory-lyrics",
   "https://genius.com/Lou-gramm-just-between-you-and-me-lyrics",
   "https://genius.com/Tom-petty-free-fallin-lyrics",
@@ -98,7 +95,6 @@ url = c(
   "https://genius.com/Gabby-barrett-i-hope-lyrics",
   "https://genius.com/Dan-shay-and-justin-bieber-10000-hours-lyrics",
   "https://genius.com/Morgan-wallen-chasin-you-lyrics",
-  "https://genius.com/Blake-shelton-and-gwen-stefani-nobody-but-you-lyrics",
   "https://genius.com/Old-dominion-one-man-band-lyrics",
   "https://genius.com/Jason-aldean-got-what-i-got-lyrics",
   "https://genius.com/Maddie-and-tae-die-from-a-broken-heart-lyrics",
@@ -114,16 +110,14 @@ url = c(
   "https://genius.com/Morgan-wallen-more-than-my-hometown-lyrics",
   "https://genius.com/Luke-combs-lovin-on-you-lyrics"
 ))
-print(songs_data)
 ```
 
 
 ```{r}
-
 library(dplyr)
- library(rvest)
- library(stringr)
- library(purrr)
+library(rvest)
+library(stringr)
+library(purrr)
  
  # Pull lyrics safely
  lyrics_df <- songs_data %>%
@@ -142,14 +136,7 @@ library(dplyr)
    left_join(lyrics_df, by = "row_id") %>%
    select(-row_id)
  
- print(songs_df_with_lyrics)
-
 ```
-```{r}
-
-```
-
-
 
 ```{r}
 #cleaning function applied to dataset
