@@ -5,24 +5,20 @@ date: "2025-04-11"
 ---
 
 ```{r setup, include=FALSE, warning = FALSE, message = FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = TRUE)
 ```
-
 
 ### Overview:
   - We decided to look at the Top Country Songs of each decade since 1960
   - We then looked for repetition in titles and phrases over each decade
     - Looking at graphs of our findings we are able to draw conclusion about repetition
 
-## lyrics and songs 
-=======
-## lyrics and songs.
-
-
->>>>>>> 247718ac7c8214bc02741d7e0985a09af4e5e8ee
+## lyrics and songs
 
 ```{r student3, include= FALSE}
 library(tidyverse)
+library(conflicted)
+
 #Data for all the songs
 songs_data <- tibble(
   Title = c(
@@ -128,7 +124,7 @@ library(dplyr)
 library(rvest)
 library(stringr)
 library(purrr)
- 
+  
 songs_data <- songs_data %>% mutate(row_id = row_number())
 
  # Pull lyrics safely
@@ -232,8 +228,8 @@ avg_title_per_year <- songs_df_with_lyrics %>%
 
 # Plot the trend
 ggplot(avg_title_per_year, aes(x = Year, y = avg_title_count)) +
-  geom_line(color = "black", size = 1) +
-  geom_point(color = "red", size = 2) +
+  geom_line(color = "steelblue", size = 1) +
+  geom_point(color = "darkred", size = 2) +
   labs(
     title = "Average Title Count per Year",
     x = "Year",
@@ -313,7 +309,7 @@ library(ggplot2)
 
 #Creating Decade column
 songs_with_decade <- songs_df_with_lyrics %>%
-  filter(!is.na(Year), !is.na(phrase_count)) %>%
+  dplyr::filter(!is.na(Year), !is.na(phrase_count)) %>%
   mutate(Decade = paste0(floor(Year / 10) * 10, "s"))
 
 #Calculation the average phrase repetition per decade
@@ -338,24 +334,5 @@ ggplot(avg_phrase_repetition, aes(x = Decade, y = avg_phrase_count, group = 1)) 
 ```
 Looking at this visual, we can see that there has been an overall increase in phrase repetition in country songs since the 1950s.
 
-```{r}
-# Plot with Title count vs word count
-ggplot(songs_df_with_lyrics, aes(x = Year)) +
-  geom_line(aes(y = title_count, color = "Title Count"), size = 1) +
-  geom_line(aes(y = word_count, color = "Word Count"), size = 1) +
-  scale_color_manual(values = c("Title Count" = "red", "Word Count" = "blue")) +
-  labs(title = "Title Count vs Word Count of Each Song",
-       x = "Time", y = "Count", color = "Legend") +
-  theme_minimal()
-```
-
-
 ### Conclusion:
-  - 
-
-Looking at this visual, we can see that there has been an overall increase in phrase repetition in country songs since the 1950s.The 2000's has the highest spike of the average count of most repeated phrases in songs, which was greater than 10.0. 
-
-### Conclusion:
-
-
 
