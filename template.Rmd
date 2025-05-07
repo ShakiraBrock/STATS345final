@@ -124,7 +124,7 @@ library(dplyr)
 library(rvest)
 library(stringr)
 library(purrr)
- 
+  
 songs_data <- songs_data %>% mutate(row_id = row_number())
 
  # Pull lyrics safely
