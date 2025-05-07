@@ -5,7 +5,7 @@ date: "2025-04-11"
 ---
 
 ```{r setup, include=FALSE, warning = FALSE, message = FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = TRUE)
 ```
 
 ### Overview:
@@ -309,7 +309,7 @@ library(ggplot2)
 
 #Creating Decade column
 songs_with_decade <- songs_df_with_lyrics %>%
-  filter(!is.na(Year), !is.na(phrase_count)) %>%
+  dplyr::filter(!is.na(Year), !is.na(phrase_count)) %>%
   mutate(Decade = paste0(floor(Year / 10) * 10, "s"))
 
 #Calculation the average phrase repetition per decade
