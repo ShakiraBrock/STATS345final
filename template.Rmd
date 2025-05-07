@@ -226,8 +226,8 @@ avg_title_per_year <- songs_df_with_lyrics %>%
 
 # Plot the trend
 ggplot(avg_title_per_year, aes(x = Year, y = avg_title_count)) +
-  geom_line(color = "steelblue", size = 1) +
-  geom_point(color = "darkred", size = 2) +
+  geom_line(color = "black", size = 1) +
+  geom_point(color = "red", size = 2) +
   labs(
     title = "Average Title Count per Year",
     x = "Year",
@@ -331,6 +331,18 @@ ggplot(avg_phrase_repetition, aes(x = Decade, y = avg_phrase_count, group = 1)) 
 
 ```
 Looking at this visual, we can see that there has been an overall increase in phrase repetition in country songs since the 1950s.
+
+```{r}
+# Plot with Title count vs word count
+ggplot(songs_df_with_lyrics, aes(x = Year)) +
+  geom_line(aes(y = title_count, color = "Title Count"), size = 1) +
+  geom_line(aes(y = word_count, color = "Word Count"), size = 1) +
+  scale_color_manual(values = c("Title Count" = "red", "Word Count" = "blue")) +
+  labs(title = "Title Count vs Word Count of Each Song",
+       x = "Time", y = "Count", color = "Legend") +
+  theme_minimal()
+```
+
 
 ### Conclusion:
   - 
