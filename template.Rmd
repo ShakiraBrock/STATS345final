@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## lyrics and songs 
 
-```{r student3}
+```{r student3, include= FALSE}
 library(tidyverse)
 #Data for all the songs
 songs_data <- tibble(
@@ -112,7 +112,7 @@ url = c(
 ```
 
 
-```{r}
+```{r, include= FALSE}
 library(dplyr)
 library(rvest)
 library(stringr)
@@ -139,7 +139,7 @@ songs_data <- songs_data %>% mutate(row_id = row_number())
  
 ```
 
-```{r}
+```{r, include= FALSE}
 #cleaning function applied to dataset
 clean_lyrics_text <- function(full_text) {
    if (!is.na(full_text) && nchar(full_text) > 0) {
@@ -179,7 +179,7 @@ clean_lyrics_text <- function(full_text) {
 
 ```
 
-```{r}
+```{r, include= FALSE}
  #cleaning function applied to dataset
  songs_df_with_lyrics <- songs_df_with_lyrics %>%
    mutate(
@@ -193,7 +193,7 @@ clean_lyrics_text <- function(full_text) {
 
 ## Section Four (Working together on function)
 
-```{r student4}
+```{r student4, include = FALSE}
 #function for title repititon
 songs_df_with_lyrics <- songs_df_with_lyrics %>%
   rowwise() %>%
@@ -209,7 +209,7 @@ songs_df_with_lyrics %>% select(Title, title_count)
 
 ```
 
-```{r}
+```{r, echo= FALSE}
 #graph for average amount of times title is repeated in song by year
 library(dplyr)
 library(ggplot2)
@@ -233,7 +233,7 @@ ggplot(avg_title_per_year, aes(x = Year, y = avg_title_count)) +
 ```
 Looking at the graph above, we can see little trend in the average title usuage in country songs across the decads sinces 1960.
 
-```{r}
+```{r, include= FALSE}
 #function for phrase repetition (I pasted this from chat so it needs to be looked at)
 library(stringr)
 library(dplyr)
@@ -295,7 +295,7 @@ print(repetition_summary)
 
 ```
 
-```{r}
+```{r, echo= FALSE}
 #graph of phrase repetition across decades (this is also from chat)
 
 library(dplyr)
