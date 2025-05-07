@@ -332,7 +332,7 @@ ggplot(avg_phrase_repetition, aes(x = Decade, y = avg_phrase_count, group = 1)) 
 
 
 ```
-Looking at this visual, we can see that there has been an overall increase in phrase repetition in country songs since the 1950s.
+Looking at this visual, we can see that there has been an overall increase in phrase repetition in country songs since the 1950s.The 2000's has the highest spike of the average count of most repeated phrases in songs, which was greater than 10.0. 
 
 ### Conclusion:
   - 
