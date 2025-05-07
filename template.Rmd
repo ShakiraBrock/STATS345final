@@ -231,7 +231,7 @@ ggplot(avg_title_per_year, aes(x = Year, y = avg_title_count)) +
   theme_minimal()
 
 ```
-Looking at the graph above, we can see little trend in the average title usuage in country songs across the decades sinces 1960. Overall the repetition of titles has increased in 2020 compared to 1960. There are some dips and variation in the trend which may be due to individual songs that do not fit the model. Around 2000, there is a steep increase in title repetition.
+Looking at the graph above, we can see little trend in the average title usuage in country songs across the decades sinces 1960. Overall the repetition of titles has increased in 2020 compared to 1960. There are some dips and variation in the trend which may be due to individual songs that do not fit the model. Around 2000, there is a steep increase in title repetition
 
 ```{r}
 #function for phrase repetition (I pasted this from chat so it needs to be looked at)
