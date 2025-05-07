@@ -8,6 +8,10 @@ date: "2025-04-11"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+### Overview:
+  - We decided to look at the Top Country Songs of each Decade since 1960
+  - We then look for repetition in titles and phrases over time 
+
 ## lyrics and songs 
 
 ```{r student3, include= FALSE}
