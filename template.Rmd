@@ -4,13 +4,14 @@ output: word_document
 date: "2025-04-11"
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, warning = FALSE, message = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ### Overview:
-  - We decided to look at the Top Country Songs of each Decade since 1960
-  - We then look for repetition in titles and phrases over time 
+  - We decided to look at the Top Country Songs of each decade since 1960
+  - We then looked for repetition in titles and phrases over each decade
+    - Looking at graphs of our findings we are able to draw conclusion about repetition
 
 ## lyrics and songs 
 
@@ -301,25 +302,24 @@ print(repetition_summary)
 
 ```{r, echo= FALSE}
 #graph of phrase repetition across decades (this is also from chat)
-
 library(dplyr)
 library(ggplot2)
 
-# Step 1: Create Decade column
+#Creating Decade column
 songs_with_decade <- songs_df_with_lyrics %>%
   filter(!is.na(Year), !is.na(phrase_count)) %>%
   mutate(Decade = paste0(floor(Year / 10) * 10, "s"))
 
-# Step 2: Compute average phrase repetition per decade
+#Calculation the average phrase repetition per decade
 avg_phrase_repetition <- songs_with_decade %>%
   group_by(Decade) %>%
   summarise(avg_phrase_count = mean(as.numeric(phrase_count), na.rm = TRUE)) %>%
   arrange(Decade)
 
-# Step 3: Plot
+#Plot
 ggplot(avg_phrase_repetition, aes(x = Decade, y = avg_phrase_count, group = 1)) +
-  geom_line(color = "steelblue", size = 1) +
-  geom_point(color = "darkred", size = 2) +
+  geom_line(color = "black", size = 1) +
+  geom_point(color = "red", size = 2) +
   labs(
     title = "Average Phrase Repetition Across Decades",
     x = "Decade",
@@ -330,4 +330,8 @@ ggplot(avg_phrase_repetition, aes(x = Decade, y = avg_phrase_count, group = 1)) 
 
 
 ```
+Looking at this visual, we can see that there has been an overall increase in phrase repetition in country songs since the 1950s.
+
+### Conclusion:
+  - 
 
