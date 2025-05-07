@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r student3}
 library(tidyverse)
-#Data for all the songs
+#Data for all the songs: includes title, artist, song length, word count, url for lyrics
 songs_data <- tibble(
   Title = c(
     "He'll Have to Go", "El Paso", "Sink the Bismarck", "Please Help Me, I'm Falling", "Let's Think About Living",
@@ -120,12 +120,12 @@ library(purrr)
  
 songs_data <- songs_data %>% mutate(row_id = row_number())
 
- # Pull lyrics safely
+ # Pull lyrics (function from chatgpt)
  lyrics_df <- songs_data %>%
    rowwise() %>%
    mutate(
      lyrics_data = list(get_lyrics_genius(url)),
-     words = list(lyrics_data$words),         # wrap in list()
+     words = list(lyrics_data$words),
      full_text = lyrics_data$text,
      word_count = if (!is.na(lyrics_data$words[1])) length(lyrics_data$words) else NA
    ) %>%
@@ -231,7 +231,7 @@ ggplot(avg_title_per_year, aes(x = Year, y = avg_title_count)) +
   theme_minimal()
 
 ```
-Looking at the graph above, we can see little trend in the average title usuage in country songs across the decads sinces 1960.
+Looking at the graph above, we can see little trend in the average title usuage in country songs across the decades sinces 1960. Overall the repetition of titles has increased in 2020 compared to 1960. There are some dips and variation in the trend which may be due to individual songs that do not fit the model. Around 2000, there is a steep increase in title repetition.
 
 ```{r}
 #function for phrase repetition (I pasted this from chat so it needs to be looked at)
