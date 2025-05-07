@@ -8,16 +8,15 @@ date: "2025-04-11"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-<<<<<<< HEAD
+
 ### Overview:
   - We decided to look at the Top Country Songs of each decade since 1960
   - We then looked for repetition in titles and phrases over each decade
     - Looking at graphs of our findings we are able to draw conclusion about repetition
 
 ## lyrics and songs.
-=======
-## lyrics and songs 
->>>>>>> 767ddc3336592c381d154dcdcb6d581cd23be003
+
+
 
 ```{r student3}
 library(tidyverse)
@@ -335,10 +334,10 @@ ggplot(avg_phrase_repetition, aes(x = Decade, y = avg_phrase_count, group = 1)) 
 
 
 ```
-<<<<<<< HEAD
+
 Looking at this visual, we can see that there has been an overall increase in phrase repetition in country songs since the 1950s.The 2000's has the highest spike of the average count of most repeated phrases in songs, which was greater than 10.0. 
 
 ### Conclusion:
-=======
->>>>>>> 767ddc3336592c381d154dcdcb6d581cd23be003
+
+
 
