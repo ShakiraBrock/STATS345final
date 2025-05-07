@@ -4,7 +4,7 @@ output: word_document
 date: "2025-04-11"
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, warning = FALSE, message = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -14,13 +14,16 @@ knitr::opts_chunk$set(echo = TRUE)
   - We then looked for repetition in titles and phrases over each decade
     - Looking at graphs of our findings we are able to draw conclusion about repetition
 
+## lyrics and songs 
+=======
 ## lyrics and songs.
 
 
+>>>>>>> 247718ac7c8214bc02741d7e0985a09af4e5e8ee
 
-```{r student3}
+```{r student3, include= FALSE}
 library(tidyverse)
-#Data for all the songs: includes title, artist, song length, word count, url for lyrics
+#Data for all the songs
 songs_data <- tibble(
   Title = c(
     "He'll Have to Go", "El Paso", "Sink the Bismarck", "Please Help Me, I'm Falling", "Let's Think About Living",
@@ -120,7 +123,7 @@ url = c(
 ```
 
 
-```{r}
+```{r, include= FALSE}
 library(dplyr)
 library(rvest)
 library(stringr)
@@ -128,12 +131,12 @@ library(purrr)
  
 songs_data <- songs_data %>% mutate(row_id = row_number())
 
- # Pull lyrics (function from chatgpt)
+ # Pull lyrics safely
  lyrics_df <- songs_data %>%
    rowwise() %>%
    mutate(
      lyrics_data = list(get_lyrics_genius(url)),
-     words = list(lyrics_data$words),
+     words = list(lyrics_data$words),         # wrap in list()
      full_text = lyrics_data$text,
      word_count = if (!is.na(lyrics_data$words[1])) length(lyrics_data$words) else NA
    ) %>%
@@ -147,7 +150,7 @@ songs_data <- songs_data %>% mutate(row_id = row_number())
  
 ```
 
-```{r}
+```{r, include= FALSE}
 #cleaning function applied to dataset
 clean_lyrics_text <- function(full_text) {
    if (!is.na(full_text) && nchar(full_text) > 0) {
@@ -187,7 +190,7 @@ clean_lyrics_text <- function(full_text) {
 
 ```
 
-```{r}
+```{r, include= FALSE}
  #cleaning function applied to dataset
  songs_df_with_lyrics <- songs_df_with_lyrics %>%
    mutate(
@@ -201,7 +204,7 @@ clean_lyrics_text <- function(full_text) {
 
 ## Section Four (Working together on function)
 
-```{r student4}
+```{r student4, include = FALSE}
 #function for title repititon
 songs_df_with_lyrics <- songs_df_with_lyrics %>%
   rowwise() %>%
@@ -217,7 +220,7 @@ songs_df_with_lyrics %>% select(Title, title_count)
 
 ```
 
-```{r}
+```{r, echo= FALSE}
 #graph for average amount of times title is repeated in song by year
 library(dplyr)
 library(ggplot2)
@@ -229,8 +232,8 @@ avg_title_per_year <- songs_df_with_lyrics %>%
 
 # Plot the trend
 ggplot(avg_title_per_year, aes(x = Year, y = avg_title_count)) +
-  geom_line(color = "steelblue", size = 1) +
-  geom_point(color = "darkred", size = 2) +
+  geom_line(color = "black", size = 1) +
+  geom_point(color = "red", size = 2) +
   labs(
     title = "Average Title Count per Year",
     x = "Year",
@@ -239,9 +242,9 @@ ggplot(avg_title_per_year, aes(x = Year, y = avg_title_count)) +
   theme_minimal()
 
 ```
-Looking at the graph above, we can see little trend in the average title usuage in country songs across the decades sinces 1960. Overall the repetition of titles has increased in 2020 compared to 1960. There are some dips and variation in the trend which may be due to individual songs that do not fit the model. Around 2000, there is a steep increase in title repetition
+Looking at the graph above, we can see little trend in the average title usuage in country songs across the decads sinces 1960.
 
-```{r}
+```{r, include= FALSE}
 #function for phrase repetition (I pasted this from chat so it needs to be looked at)
 library(stringr)
 library(dplyr)
@@ -303,27 +306,26 @@ print(repetition_summary)
 
 ```
 
-```{r}
+```{r, echo= FALSE}
 #graph of phrase repetition across decades (this is also from chat)
-
 library(dplyr)
 library(ggplot2)
 
-# Step 1: Create Decade column
+#Creating Decade column
 songs_with_decade <- songs_df_with_lyrics %>%
   filter(!is.na(Year), !is.na(phrase_count)) %>%
   mutate(Decade = paste0(floor(Year / 10) * 10, "s"))
 
-# Step 2: Compute average phrase repetition per decade
+#Calculation the average phrase repetition per decade
 avg_phrase_repetition <- songs_with_decade %>%
   group_by(Decade) %>%
   summarise(avg_phrase_count = mean(as.numeric(phrase_count), na.rm = TRUE)) %>%
   arrange(Decade)
 
-# Step 3: Plot
+#Plot
 ggplot(avg_phrase_repetition, aes(x = Decade, y = avg_phrase_count, group = 1)) +
-  geom_line(color = "steelblue", size = 1) +
-  geom_point(color = "darkred", size = 2) +
+  geom_line(color = "black", size = 1) +
+  geom_point(color = "red", size = 2) +
   labs(
     title = "Average Phrase Repetition Across Decades",
     x = "Decade",
@@ -334,6 +336,22 @@ ggplot(avg_phrase_repetition, aes(x = Decade, y = avg_phrase_count, group = 1)) 
 
 
 ```
+Looking at this visual, we can see that there has been an overall increase in phrase repetition in country songs since the 1950s.
+
+```{r}
+# Plot with Title count vs word count
+ggplot(songs_df_with_lyrics, aes(x = Year)) +
+  geom_line(aes(y = title_count, color = "Title Count"), size = 1) +
+  geom_line(aes(y = word_count, color = "Word Count"), size = 1) +
+  scale_color_manual(values = c("Title Count" = "red", "Word Count" = "blue")) +
+  labs(title = "Title Count vs Word Count of Each Song",
+       x = "Time", y = "Count", color = "Legend") +
+  theme_minimal()
+```
+
+
+### Conclusion:
+  - 
 
 Looking at this visual, we can see that there has been an overall increase in phrase repetition in country songs since the 1950s.The 2000's has the highest spike of the average count of most repeated phrases in songs, which was greater than 10.0. The 2010's then still have a slight dip, but the overall trends are increasing from 1950's till the 2020's. 
 
