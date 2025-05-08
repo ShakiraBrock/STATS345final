@@ -15,6 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
     - Looking at graphs of our findings we are able to draw conclusion about repetition
 
 ## lyrics and songs 
+
 ```{r student3, include= FALSE}
 library(tidyverse)
 #Data for all the songs
@@ -336,6 +337,7 @@ Looking at this visual, we can see that there has been an overall increase in ph
 
 
 ```{r}
+library(ggplot2)
 # Plot with Title count vs word count
 ggplot(songs_df_with_lyrics, aes(x = Year)) +
   geom_line(aes(y = title_count, color = "Title Count"), size = 1) +
