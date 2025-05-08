@@ -15,12 +15,6 @@ knitr::opts_chunk$set(echo = TRUE)
     - Looking at graphs of our findings we are able to draw conclusion about repetition
 
 ## lyrics and songs 
-=======
-## lyrics and songs.
-
-
->>>>>>> 247718ac7c8214bc02741d7e0985a09af4e5e8ee
-
 ```{r student3, include= FALSE}
 library(tidyverse)
 #Data for all the songs
@@ -242,7 +236,7 @@ ggplot(avg_title_per_year, aes(x = Year, y = avg_title_count)) +
   theme_minimal()
 
 ```
-Looking at the graph above, we can see little trend in the average title usuage in country songs across the decads sinces 1960.
+Looking at the graph above, we can see a general increase trend in the average title usage in country songs across the decades since 1960. On the x-axis we see the years from 1960 2020, the y-axis shows the average title count for the top country songs. We can see notable spikes in 2000, 2010, and in 2020, which took place after large dips. We can also see 20 years of mostly stable trends from 1960 to 1980, with a peak at 1980.  Overall, there is a little trend in the average title counts over decades, but 2020's counts are much greater than 1960's. 
 
 ```{r, include= FALSE}
 #function for phrase repetition (I pasted this from chat so it needs to be looked at)
@@ -336,7 +330,10 @@ ggplot(avg_phrase_repetition, aes(x = Decade, y = avg_phrase_count, group = 1)) 
 
 
 ```
-Looking at this visual, we can see that there has been an overall increase in phrase repetition in country songs since the 1950s.
+
+Looking at this visual, we can see that there has been an overall increase in phrase repetition in country songs since the 1950s.The x-axis is the decades, while y-axis is the average count of most popular repeated phrases. The 2000's has the highest spike of the average count of most repeated phrases in songs, which was greater than 10.0. The 2010's then still have a slight dip, but the overall trends are increasing from 1950's till the 2020's. 
+
+
 
 ```{r}
 # Plot with Title count vs word count
@@ -348,15 +345,8 @@ ggplot(songs_df_with_lyrics, aes(x = Year)) +
        x = "Time", y = "Count", color = "Legend") +
   theme_minimal()
 ```
+The above graph shows time compared to count for both titles and word counts of songs for each song. The graph shows the title count is low and constant for the count. We also can see that the word counts show many fluctuations and do not show a clear positive trend. Both title and word count tend to show peaks in the same areas on both. The title count peaks are much smaller spikes compared to the word count. 
 
+***Conclusion:***
 
-### Conclusion:
-  - 
-
-Looking at this visual, we can see that there has been an overall increase in phrase repetition in country songs since the 1950s.The 2000's has the highest spike of the average count of most repeated phrases in songs, which was greater than 10.0. The 2010's then still have a slight dip, but the overall trends are increasing from 1950's till the 2020's. 
-
-
-### Conclusion:
-
-
-
+We focused on the top country songs from the 1960s to 2020, We did our first graph on average title count per year and the second on average phrase repetition across decades. We also extended our third graph to look at title count vs word count for each song over time. For the average title count per year, we can see a general increase in title count, with significant peaks in the 2000s. We can see that the highest peaks are over ten for the average title count.  For the average phrase repetition graph, we can see an overall increase from the 1960s to the 2020s. From this graph, we do see significant peaks in the 1960s and 2000s, showing an average count of repeated phrases of over ten. These peaks could reflect cultural trends and phrases that caused these peaks of phrase repetition. We can see an increase in songs being more repetitive through the second graph, through the clear trend of the phrase repetition in songs since the 1970s. Both graphs show an increase in activity, which can support the idea that as the repetition of song titles increases, we also see the repetition of phrases. This is also supported by the third graph, as we can see spikes in both title and word count at the corresponding times. Overall, we can see repetition having increasing trends in the top country songs from the 1960s to the 2020s. 
