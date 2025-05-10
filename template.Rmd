@@ -25,9 +25,9 @@ songs_data <- tibble(
     "Blaze of Glory", "Just Between You and Me", "Free Fallin'", "Breathe", "Amazed", "The Way You Love Me", "I Need You",
     "That's the Way", "Yes!", "The Best Day", "How Do You Like Me Now?!", "My Best Friend", "I Hope You Dance",
     "What About Now", "Cowboy Take Me Away", "Need You Now", "Mine", "You Belong with Me", "Stuck Like Glue", "Undo It",
-    "The House That Built Me", "If I Die Young", "American Honey", "Lover, Lover", "The Bones", "I Hope", "10,000 Hours",
+    "The House That Built Me", "If I Die Young", "American Honey", "Lover, Lover", "The Bones", "I Hope", "Ten Thousand Hours",
     "Chasin' You", "One Man Band", "Got What I Got", "Die from a Broken Heart", "One of Them Girls",
-    "Hard to Forget", "One Margarita", "I Hope You're Happy Now", "Even Though I'm Leaving", "Be Like That", "Homesick",
+    "Hard to Forget", "One Margarita", "I Hope You're Happy Now", "Even Though I'm Leavin", "Be Like That", "Homesick",
     "Bluebird", "More Than My Hometown", "Lovin' on You"
   ),
   Artist = c(
@@ -120,26 +120,45 @@ url = c(
 library(dplyr)
 library(rvest)
 library(stringr)
-library(purrr)
- 
+
+# Define the scraping function 
+get_lyrics_genius <- function(url) {
+  tryCatch({
+    h <- read_html(url)
+    lyrics <- html_nodes(h, 'div[data-lyrics-container="true"]') %>%
+      html_text2()
+    full_lyrics <- paste(lyrics, collapse = " ")
+    list(
+      words = str_split(full_lyrics, "\\s+")[[1]],
+      text = full_lyrics,
+      lines = str_split(full_lyrics, "\\n+")[[1]]
+    )
+  }, error = function(e) {
+    warning("Failed to scrape: ", url)
+    list(words = NA, text = NA, lines = NA)
+  })
+}
+
+# Add row ID to preserve alignment
 songs_data <- songs_data %>% mutate(row_id = row_number())
 
- # Pull lyrics safely
- lyrics_df <- songs_data %>%
-   rowwise() %>%
-   mutate(
-     lyrics_data = list(get_lyrics_genius(url)),
-     words = list(lyrics_data$words),         # wrap in list()
-     full_text = lyrics_data$text,
-     word_count = if (!is.na(lyrics_data$words[1])) length(lyrics_data$words) else NA
-   ) %>%
-   ungroup() %>%
-   select(row_id, words, full_text, word_count)
- 
- # Join lyrics back to main data
- songs_df_with_lyrics <- songs_data %>%
-   left_join(lyrics_df, by = "row_id") %>%
-   select(-row_id)
+# Pull lyrics safely
+lyrics_df <- songs_data %>%
+  rowwise() %>%
+  mutate(
+    lyrics_data = list(get_lyrics_genius(url)),
+    words = list(lyrics_data$words),
+    full_text = lyrics_data$text,
+    lines = list(lyrics_data$lines),
+    word_count = if (!is.na(lyrics_data$words[1])) length(lyrics_data$words) else NA
+  ) %>%
+  ungroup() %>%
+  select(row_id, words, full_text, word_count, lines)
+
+# Join lyrics back to main data
+songs_df_with_lyrics <- songs_data %>%
+  left_join(lyrics_df, by = "row_id") %>%
+  select(-row_id)
  
 ```
 
@@ -195,25 +214,36 @@ clean_lyrics_text <- function(full_text) {
 
 ### Repetition in Country Songs
 
-```{r student4, include = FALSE}
-#function for title repititon
+```{r student4, include = FALSE, warning=FALSE}
+library(stringr)
+library(dplyr)
+
+# Add clean versions of both text and title to ignore random punctuation and capitalizations
 songs_df_with_lyrics <- songs_df_with_lyrics %>%
+  mutate(
+    text_for_repetition = clean_full_text %>%
+      str_to_lower() %>%
+      str_replace_all("[[:punct:]]", "") %>%
+      str_squish(),
+    clean_title = Title %>%
+      str_to_lower() %>%
+      str_replace_all("[[:punct:]]", "") %>%
+      str_squish()
+  ) %>%
   rowwise() %>%
   mutate(
     title_count = str_count(
-    str_to_lower(clean_full_text), 
-    regex(paste0("\\b", str_to_lower(Title), "\\b"))
+      text_for_repetition,
+      regex(paste0("\\b", clean_title, "\\b"), ignore_case = FALSE)
     )
   ) %>%
   ungroup()
-
-songs_df_with_lyrics %>% select(Title, title_count)
 
 ```
 
 
 
-```{r, echo= FALSE}
+```{r, echo= FALSE, warning=FALSE}
 #graph for average amount of times title is repeated in song by year
 library(dplyr)
 library(ggplot2)
@@ -235,9 +265,11 @@ ggplot(avg_title_per_year, aes(x = Year, y = avg_title_count)) +
   theme_minimal()
 
 ```
-Looking at the graph above, we can see a general increase trend in the average title usage in country songs across the decades since 1960. On the x-axis we see the years from 1960 to 2020 and on the y-axis we see the average title count for the top country songs. We can see notable spikes in 2000, 2010, and in 2020, which took place after large dips. We can also see 20 years of mostly stable trends from 1960 to 1980, with a peak at 1980.  Overall, there is a little trend in the average title counts over decades, but 2020's counts are much greater than 1960's. 
 
-```{r, include= FALSE}
+
+Looking at the graph above, we can see a general increase in the average title usage in country songs across the decades since 1960. On the x-axis we see the years from 1960 to 2020 and on the y-axis we see the average title count in the lyrics for the top country songs. We can see notable spikes in 2000, 2010, and in 2020, which took place after large dips. We can also see 20 years of mostly stable trends from 1960 to 1980, with a peak at 1980.  Overall, there is a little trend in the average title counts over the decades with 2020's counts being much greater than 1960's. 
+
+```{r, include= FALSE, warning=FALSE}
 #function for phrase repetition 
 library(stringr)
 library(dplyr)
@@ -298,7 +330,7 @@ print(repetition_summary)
 
 ```
 
-```{r, echo= FALSE}
+```{r, echo= FALSE, warning=FALSE}
 #graph of phrase repetition across decades
 library(dplyr)
 library(ggplot2)
@@ -329,23 +361,40 @@ ggplot(avg_phrase_repetition, aes(x = Decade, y = avg_phrase_count, group = 1)) 
 
 ```
 
-Looking at this visual, we can see that there has been an overall increase in phrase repetition in country songs since the 1950s.The x-axis is the decades, while y-axis is the average count of most popular repeated phrases. The 2000's has the highest spike of the average count of most repeated phrases in songs, which was greater than 10.0. The 2010's then still have a slight dip, but the overall trends are increasing from 1950's till the 2020's. 
+
+Looking at this visual, we can see that there has been an overall increase in phrase repetition in country songs since the 1950s.The x-axis is the decades, while y-axis is the average count of most popular repeated phrases. The 2000's has the highest spike of the average count of most repeated phrases in songs, which was greater than 10.0. The 2010's then still have a slight dip, but the overall trends are increasing from the 1950's to the 2020's. 
 
 
 # Extending Our Findings
 
-```{r}
+```{r, echo= FALSE, warning=FALSE}
 library(ggplot2)
-# Plot with Title count vs word count
+#to visualize how title count is related to word count, two y axis's are used and scaled to numbers that match the data provided
 ggplot(songs_df_with_lyrics, aes(x = Year)) +
   geom_line(aes(y = title_count, color = "Title Count"), size = 1) +
-  geom_line(aes(y = word_count, color = "Word Count"), size = 1) +
+  geom_line(aes(y = word_count / 10, color = "Word Count"), size = 1) +
+  scale_y_continuous(
+    name = "Title Count",
+    limits = c(0, 100),  # controls both axes scaling
+    sec.axis = sec_axis(~ . * 10, name = "Word Count", breaks = seq(0, 1000, 200))
+  ) +
   scale_color_manual(values = c("Title Count" = "red", "Word Count" = "blue")) +
-  labs(title = "Title Count vs Word Count of Each Song",
-       x = "Time", y = "Count", color = "Legend") +
-  theme_minimal()
+  labs(
+    title = "Title Count vs Word Count of Each Song",
+    x = "Year",
+    color = "Legend"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.title.y.left = element_text(color = "red"),
+    axis.title.y.right = element_text(color = "blue")
+  )
+
+
 ```
-The above graph shows the count for both titles and words of country songs over time. We  can see that the word and title counts show many fluctuations. Both title and word count tend to show peaks in the same areas, which can lead us to conclude that title count may be higher for certain country songs because they have more words.
+
+
+The above graph shows the count for both titles and words of country songs over time. We  can see that the word and title counts show many fluctuations. Both title and word count tend to show peaks in the same areas, which can lead us to conclude that title count may be higher for certain country songs because they have more words.There also seem to be some peaks after 2000 which could indicate an increase in word count along with title usuage in the lyrics. 
 
 ### Conclusion
 
